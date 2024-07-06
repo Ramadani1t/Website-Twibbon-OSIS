@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <title>
+   Twibbon OSIS Generator
+  </title>
+  <link href="twibbon/css/font-awesome.css" rel="stylesheet"/>
+  <link href="twibbon/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="twibbon/js/jquery.min.js" type="text/javascript">
+  </script>
+  <script src="twibbon/js/popper.min.js" type="text/javascript">
+  </script>
+  <script src="twibbon/js/bootstrap.min.js" type="text/javascript">
+  </script>
+  <script src="twibbon/twibbon/croppie.js">
+  </script>
+  <link href="twibbon/twibbon/croppie.css" rel="stylesheet"/>
+  <script>
+   $(document).ready(function(){
+		var twibbonurl="twibbon/twibbon/TwibbonMPLS.png";;
+		// Initialized Croppie
+		var croppie_div = $("#image").croppie({
+		viewport: {
+		width: 300,
+		height: 300,
+		boundary: { width: 300, height: 300 }
+		}
+		});
+		// Sets the image from the url # Doesnt Work
+		
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function(e) {
+				croppie_div.croppie('bind', {
+					url: e.target.result
+				});
+				}
+			reader.readAsDataURL(input.files[0]);
+			}
+		}
+		$("#fileinput").change(function() {
+			readURL(this);
+		});
+		$('.generatetwibbon').on('click', function(e) {
+			croppie_div.croppie('result',{
+				type:'base64',
+				format:'jpeg',
+				size:{width:1080,height:1080}
+			}).then(function(resp){
+				var canvas= document.getElementById('canvas');
+				var context= canvas.getContext("2d");
+				var image = new Image();
+				image.src=resp;
+				image.onload=function(){
+					context.drawImage(image,0,0,canvas.width,canvas.height);
+					var image2 = new Image();
+					image2.src=twibbonurl;
+
+					var maxwidth=1080;
+					var maxheight=1080;
+					var ratio=0;
+					var width=image2.width;
+					var height=image2.height;
+					if(width>maxwidth){
+						ratio=maxwidth/width;
+						height=height*ratio;
+						width=width*ratio;
+						//console.log("kondisi1");
+
+					}
+					else if(width<maxwidth){
+						ratio=maxwidth/width;
+						height=height*ratio;
+						width=width*ratio;
+						//console.log("kondisi3");
+					}
+					else if(height<maxheight){
+						ratio=maxheight/height;
+						height=height*ratio;
+						width=width*ratio;
+						//console.log("kondisi4");
+					}
+					if(height>maxheight){
+						ratio=maxheight/height;
+						height=height*ratio;
+						width=width*ratio;
+						//console.log("kondisi2");
+					}
+					
+
+					image2.onload=function(){
+						context.drawImage(image2,0,0,1080,1080);
+						var canvas = document.getElementById('canvas');
+						var imagepreview = document.getElementById('imagepreview');
+						imagepreview.src=canvas.toDataURL("image/png");
+						
+					}
+				}
+			});
+
+		});
+		$('.downloadimage').on('click', function(e) {
+			var canvas= document.getElementById('canvas');
+			var link = document.createElement('a');
+			link.download = "Twibbon Result.png";
+			link.href = canvas.toDataURL("image/png");
+			link.click();
+		});
+		$("#filetwibbon").change(function() {
+			if (this.files && this.files[0]) {
+			var reader2 = new FileReader();
+			reader2.onload = function(e) {
+				twibbonurl=e.target.result;
+				$('.overlay')[0].style.backgroundImage="url("+e.target.result+")";
+				}
+			reader2.readAsDataURL(this.files[0]);
+			}
+		});
+		});
+  </script>
+  <style type="text/css">
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+			#twibbon{
+				background-repeat:no-repeat; 
+				background-size:cover;
+				background-image: url(twibbon/twibbon/placeholder-user.png);
+				width: 300px !important;height: 300px !important;position: relative;margin:0 auto;
+			}
+			.overlay {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin:0px;
+			height: 100%;
+			width: 100%;
+			z-index: 2;
+			background-image:url(twibbon/twibbon/TwibbonMPLS.png);
+			background-repeat:no-repeat;
+			background-size: contain;
+			background-position: top left;
+			pointer-events: none
+
+			}
+			h1 {
+				width: fit-content;
+				font-family: poppins;
+				margin: auto;
+      font-size: 18px;
+      padding-top: 10px;
+			}
+    h2 {
+				width: fit-content;
+				font-family: poppins;
+				margin: auto;
+      font-size: 18px;
+				padding-bottom: 25px;
+				padding-top: 5px;
+			}
+			
+			body {
+				background: url(twibbon/Dashboard.png);
+			}
+  </style>
+ </head>
+ <body>
+  <div class="container">
+   <br/>
+   <h1 class="judul">
+    TWIBBON OSIS MPLS 2024
+   </h1>
+ <h2 class="judul">
+    SMK Permata Bangsa 
+   </h2>
+   <div class="row">
+    <div class="col-md-6">
+     <div class="card">
+      <div class="card-body">
+       <div id="twibbon">
+        <div class="overlay">
+        </div>
+        <div id="image">
+        </div>
+       </div>
+       <br/>
+       <br/>
+       <div class="text-center">
+        <input accept="image/gif, image/jpeg, image/png" id="fileinput" style="display: none" type="file"/>
+        <label class="btn btn-primary" for="fileinput" style="margin:0">
+         <span class="fa fa-upload">
+         </span>
+         Upload Gambar
+        </label>
+        <button class="generatetwibbon btn btn-primary" data-target="#modal" data-toggle="modal">
+         <span class="fa fa-gear">
+         </span>
+         Buat
+        </button>
+        <br/>
+        <br/>
+       </div>
+       <br/>
+       <br/>
+       <div aria-hidden="true" aria-labelledby="exampleModalLabel" class="modal fade" id="modal" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg" role="document">
+         <div class="modal-content">
+          <div class="modal-body text-center">
+           <canvas height="1080" id="canvas" style="display:none;" width="1080">
+           </canvas>
+           <img alt="Foto Anda" class="img-fluid" id="imagepreview" src="twibbon/"/>
+          </div>
+          <div class="modal-footer">
+           <button class="btn btn-success downloadimage" type="button">
+            <span class="fa fa-download">
+            </span>
+            Download
+           </button>
+           <button class="btn btn-danger" data-dismiss="modal" type="button">
+            <span class="fa fa-close">
+            </span>
+            Close
+           </button>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <script>
+     $(document).ready(function(){
+	$("#caption").click(function(){
+		this.select();
+		document.execCommand("copy");
+	});
+	$("#tooltipcopy").tooltip({trigger:'click',delay:{"show":1080,"hide":200}});
+	$("#tooltipcopy").click(function(){
+		$("#caption").select();
+		document.execCommand("copy");
+		$("#tooltipcopy").attr('data-original-title','copied!').tooltip('show');
+	});
+	$("#tooltipcopy").mouseout(function(){
+		$("#tooltipcopy").tooltip('hide');
+	});
+
+	});
+    </script>
+   </div>
+  </div>
+ </body>
+</html>
